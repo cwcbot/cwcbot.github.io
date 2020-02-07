@@ -1,795 +1,421 @@
 
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
 
-<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
-<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
- <meta charset="UTF-8">
-
-
- 
-
-
-<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase.js"></script>
-<script type="text/javascript">
-	
-////////////////////////////////////////////////////////FIRE BASE/////////////////////////////////////////////////////////////////////////////////
-  // Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyBqDWOcC4-PzqVcTtwDCCKmvfqdI6lcSNA",
-    authDomain: "appchef-db.firebaseapp.com",
-    databaseURL: "https://appchef-db.firebaseio.com",
-    projectId: "appchef-db",
-    storageBucket: "appchef-db.appspot.com",
-    messagingSenderId: "954075447114"
-  };
-  firebase.initializeApp(config);
-  
-  var chat = document.getElementById('bigOne');
-  var dbRef = firebase.database().ref().child('text');
-  dbRef.on('value',snap=>bigOne.innerText=snap.val());
-  //dataBase.push({ 'name': document.getElementById('name').value, 'Email': document.getElementById('email').value, 'Phone number': document.getElementById('phonenumber').value });
-  var database = firebase.database();
-  var fruits = database.ref('Chat/ChatID/');
-  var data = {
-  name: 'aaa',
-  count: 7
-			}
-		//	fruits.push(data);
-
-
-
-var key;
-var myRef;
-var txtlink=null;
-var destname;
-
-myRef = firebase.database().ref('Chat/ChatID/').push();
-   key = myRef.key;
-
-function writeUserData1() {
-   myRef = firebase.database().ref('Chat/ChatID/').push();
-   key = myRef.key;
-}
-
-//////////////////////////////END OF FIRE BASE FUNCTIONS//////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-   // var accessToken ="fb406d87473f48b4b3aeddb58dca471d";
-  //  var accessToken ="733d61c1ac5c4ab8b0a9ca22302fc272";
-   // before structured bot   var accessToken ="bb61b36084ee4a2192c7b6310862c20c";
-  // var accessToken ="9e4b0106dc4242549a0842ea9f831dc9"; structured bot for missions
-      var accessToken ="7c8beed784a94dd9af529f6857c83730"; /// MergedBot Compenduim+New Structure
-  
-    var baseUrl = "https://api.dialogflow.com/v1/";
-    $(document).ready(function() {
-        $("#input").keypress(function(event) {
-            if (event.which == 13) {
-                event.preventDefault();
-                send();
-                
-this.value = '';
-			document.body.scrollTop = document.body.scrollHeight;
-            }
-        });
-        $("#rec").click(function(event) {
-            switchRecognition();
-        });
-    });
-    
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	var recognition;
-    function startRecognition() {
-        recognition = new webkitSpeechRecognition();
-        recognition.onstart = function(event) {
-            updateRec();
-        };
-        recognition.onresult = function(event) {
-            var text = "";
-            for (var i = event.resultIndex; i < event.results.length; ++i) {
-                text += event.results[i][0].transcript;
-            }
-            setInput(text);
-            stopRecognition();
-        };
-        recognition.onend = function() {
-            stopRecognition();
-        };
-        recognition.lang = "en-US";
-        recognition.start();
-    }
-    function stopRecognition() {
-        if (recognition) {
-            recognition.stop();
-            recognition = null;
-        }
-        updateRec();
-    }
-    function switchRecognition() {
-        if (recognition) {
-            stopRecognition();
-        } else {
-            startRecognition();
-        }
-    }
-    function setInput(text) {
-		if(text!=""){
-        $("#input").val(text);
-        send();
-		text=""
-		$("#input").val(text);
-		}
-    }
-    function updateRec() {
-        $("#rec").text(recognition ? "Stop" : "Speak");
-		send();
-    }
-function send() {
-	
-
-        var text = $("#input").val();
-		//
-		if(text!=""){
-    conversation.push("Me: " + text + '\r\n');
-	
-	
-	
-	//////////////////////////////////////////////////
-	        
-			var txtTolist = $("#txtJ").val();
-    conversation.push("Me: " + txtTolist + '\r\n');
-	
-	//////////////////////////////////////////////////
-    $.ajax({
-            type: "POST",
-            url: baseUrl + "query?v=20150910",
-            contentType: "application/json; charset=utf-8",
-            dataType: "json",
-            headers: {
-                "Authorization": "Bearer " + accessToken
-            },
-            data: JSON.stringify({ query: text, lang: "en", sessionId: "somerandomthing" }),
-            success: function(data) {
-                var respText = data.result.fulfillment.speech;
-                /////////
-                var txtmsg = data.result.fulfillment.messages;
-                 //txtlink = data.result.fulfillment.messages[1];
-                 for (var tt=0;tt<txtmsg.length;tt++){
-					 if (txtmsg[tt].type=='link_out_chip'){
-						 txtlink=data.result.fulfillment.messages[1].url;
-						 destname=data.result.fulfillment.messages[1].destinationName;
-						 }
-					 }
-               // if (txtlink!=undefined){
-				//alert('this is url txt '+txtlink['url']);
-				//$("#jchat").append('<a href='+txtlink['url']+'more info'+   "</a>");
-				//addlink();
-			//	}
-                //txturl=txturl.url;
-                //txturl=JSON.stringify(txturl);
-				var responsetext= data
-                var restext=JSON.stringify(responsetext);
-                console.log(' this is response text'+restext);
-                console.log ('this is array size '+data.result.fulfillment.messages.length)
-                if (data.result.fulfillment.messages.length==2){
-                var urlrefer=data.result.fulfillment.messages[1].payload.url;
-                console.log('this is url : '+ (data.result.fulfillment.messages[1].payload.url));
-				}
-
-             //   console.log('this is url : '+ (data.result.fulfillment.messages[1].payload.url));
-                ///////////CHECKING ARRAY ITEMS//////////////
-               var index;
-               for (index=0,len = txtmsg.length;index < len; ++index){
-			   console.log(txtmsg[index].type);
-			   if(txtmsg[index].type=="suggestion_chips"){
-			      var filteredchips= JSON.stringify(txtmsg[index].suggestions);
-                ///////////
-				 var lang = data.result.parameters.language;
-                console.log("Respuesta: " + respText);
-                console.log("txtmsg: " + txtmsg[index]);
-                console.log("txtmsg filtered: " + filteredchips);
-                            
-                var count = Object.keys(txtmsg[index].suggestions).length;
-            
-                var chips =[];
-                for (i =0 ; i < count; i++){
-				
-
-				chips[i]  = txtmsg[index].suggestions[i].title
-				
-				console.log("loopno: "+i);
-			
-				}
-				
-                setResponse(respText+","+chips);
-              
-            
-                $("#response").scrollTop($("#response").height());
-                $("#response1").scrollTop($("#response1").height());
-			   }
-			   
-			   }
-                ///////////END OF CHECKING ARRAY ITEMS//////////////
-                if (filteredchips!=null){
-         
-			}
-			else {
-				var lang = data.result.parameters.language;
-                console.log("Respuesta: " + respText +" and this is url "+urlrefer);
-                console.log("this is respText >>>>>>>>>>"+respText)
-                setResponse(respText+" url "+ urlrefer);
-              //  setResponseL(lang);
-                $("#response").scrollTop($("#response").height());
-                $("#response1").scrollTop($("#response1").height());
-			}
-		
-            },
-            error: function() {
-                setResponse("Internal Server Error");
-            }
-        });
-		
-		/////////////////////
-		
-		 $(document).ready(function(){
-		 
-		   $(document).ready(function(){
-         var listv = "";
-        
-		$('<img />', {
-    src: 'http://www.free-icons-download.net/images/green-user-symbols-3763.png',
-    width: '50px',
-    height: '50px'
-}).appendTo($('#jchat'));
-		
-        listv +='<b>'   +" : "+ '</b>'   +'<p style="word-wrap: break-word;margin:10px;wedith:auto" >'+  text+'</p>';
-        
-    $("#jchat").append(listv);
-    
-        /////////////////////////////FIRE BASE///////////////////
-    function userchat() {
-		
-    var newData={
-       UserChat: text,
-   }
-
-   myRef.push(newData);
-   
-}
-	userchat();
-////////////////////////////////////END OF FIREBASE////////////////////////////	
-    
-    
-document.body.scrollTop = document.body.scrollHeight;
-});
-     
-});
-		
-		
-		}
-		//
-		text="";
-    }
-	
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   
-  
-   
-  /////////////////****************************************///////////////////// 
-	function setResponse(val) {
-	    //Edit "AI: " to change name
-		var convsplit = [];
-		console.log("val"+val);
-		var splitHelp = [];
-		var splitHelp = val.split("and here is");
-		var valNEW= splitHelp[0];
-		var valHelp=splitHelp[1];
-		var splited = [];
-		//var splited = val.split(",");
-	    var splitedurl = valNEW.split("url");
-	    splitedurl =valNEW.split(",");
-		console.log(' this is splited url :>>>><<<>>><<<>> '+ splitedurl)
-		
-		var splited = valNEW.split(",");
-		
-		 //console.log(' this is splited url : '+ val)
-		console.log('this is val for check ====>'+ splitHelp);
-        conversation.push("CwCBot: " + splited[0]+'\r\n');
-		document.body.scrollTop = document.body.scrollHeight;
-////////////////////////ADDDIINGGGG ITEMMMSSSS//////////////////////////		
-  $("#gamelist").text(convsplit.join(""));
-for(i = 1; i < splited.length; i++) { 
-  convsplit.push( " : "+splited[i] + '\r\n');
-  
-  
-  
-  ///////
-  
-  
-
-  $(document).ready(function(){
-         var list = "";
-       
-		
-        
-	if(splited[i].indexOf(':')>-1){
-	//alert(splited[i]);
-	 if(i==1){
-			list +='<option >'+"Select service"+"</>";
-		}
-	list +='<option >'+splited[i]+"</>";
-	}
-    $("#gamelist").append(list);
-	
-	
-});
- 
-  
-  /////
-  
-  
-}
-
-///////////////////////////TO jQuery List////////////////////////////////
-
-
-  
-  ///////
-  
-  
-
-   var lastbot= splited.length-1;
-    $(document).ready(function(){
-         var list = "";
-         var listchips = "";
-        var chipsjson="";
-		
-        list +=splited[0];
-        console.log("splited : " +splited);
-        
-        ////Storing chips/////
-       /*
-        for(q = 1; q < splited.length; q++) { 
-        listchips +=splited[q];
-      //  chipsjson +=JSON.stringify(splited[1].title);
-        }
-        */
-        //  [{"title":"العربية"}{"title":"English"}{"title":"Turkish"}]  //
-       // var chipsjson =JSON.parse(listchips);
-      //  listchips=splited[1]+splited[2];
-        /////////////////
-        $("#jchat").append("<hr>");
-
-$('<img />', {
-    src: 'https://raw.githubusercontent.com/clickalicious/ci-github-bot/HEAD/docs/logo-large.png',
-    width: '50px',
-    height: '50px'
-}).appendTo($('#jchat'));
-
-	var splitedurl=splited.toString();
-	var infourl= splitedurl.split("url");
-
-	var indexurl = splited.indexOf("url")
-		
-	console.log('this is splited for check >>>>>>>>>>>>>>>>>XXXXXXXXXXXX '+ infourl[1]+ ' this is lenght ' + infourl.length+ ' this is inforurl '+ infourl +' this is indexurl ' +indexurl);
-	
-	var sslist = []; ////organize the language
-		var sslist = list.split("~");
-		if (sslist[1]=="Welcome to CwC bot Please pick your language.")
-	{
-		$("#jchat").append('<span >'+ "<b>"   +  ' : '+ "</b>"  +"<span>"+sslist[0]+"</span>" +   "</span>");
-		 $("#jchat").append("<br>");
-		$("#jchat").append('<span >'  +sslist[1] +   "</span>");
-	if(splitHelp[1]!=null){
-   // $("#jchat").append('<span>'+ "<b>"   +  'Here is'+ "</b>" +splitHelp[1] +  "</span>");
-	}
-	$("#jchat").append("<hr>");
-	}
-	else{
-		
-   // $("#jchat").append('<span >'+ "<b>"   +  'CwC bot : '+ "</b>"  +'<p onload="botchat()" style="background:content-box;text-align:justify;border:aliceblue;resize:initial;padding:5px;">' +list+'</p>' +   "</textarea>");
-    if(infourl[1]!=undefined && infourl[1].length!=10){
-	$("#jchat").append('<span style="word-wrap: break-word;" >'+ "<b>"   +  ' : '+ "</b>"  +'<p onload="botchat()" style="background:content-box;text-align:justify;border:aliceblue;resize:initial;margin:10px;wedith:auto">' +infourl[0]+'<a href='+'"'+infourl[1]+'"target=_blank'+'>'+'More Information'+'</a>' +'</p>' +   "</textarea>");
-//  	$("#jchat").append('<span style="word-wrap: break-word;" >'+ "<b>"   +  ' : '+ "</b>"  +'<p onload="botchat()" style="background:content-box;text-align:justify;border:aliceblue;resize:initial;margin:10px;wedith:auto">' +list+'</p>' +   "</textarea>");
-		//alert(infourl[1]);
-  	}
-	else{
-//	$("#jchat").append('<span style="word-wrap: break-word;" >'+ "<b>"   +  ' : '+ "</b>"  +'<p onload="botchat()" style="background:content-box;text-align:justify;border:aliceblue;resize:initial;margin:10px;wedith:auto">' +infourl[0]+'<a href='+'"'+infourl[1]+'"target=_blank'+'>'+'More Information'+'</a>' +'</p>' +   "</textarea>");	
-    	$("#jchat").append('<span style="word-wrap: break-word;" >'+ "<b>"   +  ' : '+ "</b>"  +'<p onload="botchat()" style="background:content-box;text-align:justify;border:aliceblue;resize:initial;margin:10px;wedith:auto">' +list.replace('url undefined','')+'</p>' +   "</textarea>");
-	console.log(' this is list value zzzzzzzzzzzzzzz' + list)
-    	}
-    $("#jchat").append("<br>");
-    //console.log('this is txtlink value     '+txtlink['url']);
-    if (txtlink!=null){
-				
-				$("#jchat").append('<a href="'+txtlink+'" target="_blank">'+destname+'</a>');
-				//addlink();
-				}
-    /////////////////////////////FIRE BASE///////////////////
-    function botchat() {
-		
-    var newData={
-       ChatBot: list,
-   }
-
-   myRef.push(newData);
-   
-}
-	botchat();
-////////////////////////////////////END OF FIREBASE////////////////////////////		
-    //////////////////ADDING SUGGESTION CHIPS////////////////////////////
-    this.chipsvalue=[];
-    for(q = 1; q < splited.length; q++) { 
-        var qq= "'"+splited[q]+"'";
-       //qq=qq.replace(/\s/g, '') ;
-    //$("#jchat").append('<span >'+ "<b>"   +  'CwC bot : '+ "</b>"  +splited +   "</span>");
-  //  $("#jchat").append('<button onclick=setlang('+qq.replace(/\s/g, '')+') >'+qq+   '</button>');
-  
-  if (qq.indexOf(":") >= 0){
-    
-	///DONT ADD BUTTON///
-	}else{
-		
-		$("#jchat").append('<button onclick=setlang('+encodeURIComponent(qq)+') style="border-radius: 10px;border:groove;background-color:transparent;margin:5px;margin-left:10%" >'+'<b>'+qq.replace(new RegExp("'","g"),"")+'</b>'+   '</button>');
-	
-	}
-	
-	 
-	  
-    //this.chipsvalue[q]=splited[q];
-		
-		
-	  
-	  }
-	 
-	  
-	//////////////////////////END OF ADDING SUGGESTION CHIPS//////////////////////////
-	if(splitHelp[1]!=null){
-   // $("#jchat").append('<span>'+ "<b>"   +  'Here is'+ "</b>" +splitHelp[1] +  "</span>");
-	}
-	$("#jchat").append("<hr>");
-document.body.scrollTop = document.body.scrollHeight;
-	}
-
-	
-	
-	
-
-	
-	/*
-	$('#jchat').append(
-    $('<li>').append(
-        $('<button>').attr('href','tryit.asp-filename=tryjqmob_lists_thumbs2.html#').append(
-            $(list)
-)));   
-	
-	*/
-	
-
-});
- 
-  
-  /////
-  
-  
-
-
-
-
-//////////////////////////////////END OF ADDING ITEMS///////////////////////////
-
-
-
-
-
-      //  convsplit.push( splited[3] + '\r\n');
-        
-		
-		$("#response").text(conversation.join(""));
-		 $("#response1").text(convsplit.join(""));
-		 //$("#gamelist").text(convsplit.join(""));
-    }
-	
-
-    var conversation = [];
-    var convsplit = [];
-	
-	
-	
-	
-	
-	
-
-	
-	
-	
-	///////////////////////////////////////////////////fghfghfghfghofsjghoiroihyjoierworejohjoerjhosoijodjsgojreoijsjhoijrshoijojhdfoser///////////////////////////////////////////////////////////////////////////////////////////////
-	
-
-
-	var  langno;
-	var distination;
-	var hotline;
-	
-	
-function getval(sel)
-{
-    var x= (sel.value);
-	var x2 = [];
-	 x2=x.split("; ");
-	 x=x2[0];
-	// alert(x2[1]);
-	 distination=x2[2];
-	 hotline=x2[3];
-	 
-	 //alert(sel.index);
-	 
-	//alert(x);
-	//alert(val.lang);
-
-	var splitx = [];
-		var splitx = x.split(": ");
-	//alert(splitx[2]);
-	var url = (window.location != window.parent.location)
-            ? document.referrer
-            : document.location.href;
-	//alert(url);
-	//var tt=setResponseL(val);
-	//alert(tt);
-	//selar();
-	var y=parseInt(langno);
-	var z=parseInt(splitx[2]);
-	//alert(y);
-	var serviceID=z+y;
-	//window.open("https://turkey.servicesadvisor.org/#/services/"+splitx[2]+"?language=EN");.
-	//window.parent.location.href= "http://88.247.29.227.81/#/services/"+splitx[2]+"?language=EN";
-	//alert(serviceID+" : "+splitx[2]+" : "+y);
-	if(langno=="1"){
-	window.parent.location.href= "http://88.247.29.227:81/#/services/"+serviceID+"?language=AR";
-	$("#jchat").append('<span style="word-wrap: break-word;" >'+'<p id="chatfeed" style="background:content-box;text-align:justify;border:aliceblue;resize:initial;margin:10px;wedith:auto">' +x2[1]+'</p>' +   "</textarea>");
-//	$("#jchat").append('<button onclick="showloc()">Show path</button>');
-	$("#jchat").append('<button onclick=showloc() style="border-radius: 10px;border:groove;background-color:transparent;margin:5px;margin-left:10%" >'+'<b>'+'اعرض الطريق'+'</b>'+   '</button>');
-	$("#jchat").append("<br>");
-	$("#jchat").append('<span style="word-wrap: break-word;" >'+'<p style="background:content-box;text-align:justify;border:aliceblue;resize:initial;margin:10px;wedith:auto">' +hotline+'</p>' +   "</textarea>");
-	$("#jchat").append("<hr>");
-	document.body.scrollTop = document.body.scrollHeight;
-	}
-	if(langno=="0"){
-	window.parent.location.href= "http://88.247.29.227:81/#/services/"+serviceID+"?language=EN";
-	$("#jchat").append('<span style="word-wrap: break-word;" >'+'<p style="background:content-box;text-align:justify;border:aliceblue;resize:initial;margin:10px;wedith:auto">' +x2[1]+'</p>' +   "</textarea>");
-//	$("#jchat").append('<button onclick="showloc()">Show path</button>');
-	$("#jchat").append('<button onclick=showloc() style="border-radius: 10px;border:groove;background-color:transparent;margin:5px;margin-left:10%" >'+'<b>'+'Show path'+'</b>'+   '</button>');
-	$("#jchat").append('<button onclick=livesupport() style="border-radius: 10px;border:groove;background-color:transparent;margin:5px;margin-left:10%" >'+'<b>'+'Live support'+'</b>'+   '</button>');
-	$("#jchat").append("<br>");
-	$("#jchat").append('<span style="word-wrap: break-word;" >'+'<p style="background:content-box;text-align:justify;border:aliceblue;resize:initial;margin:10px;wedith:auto">' +hotline+'</p>' +   "</textarea>");
-	$("#jchat").append("<hr>");
-	document.body.scrollTop = document.body.scrollHeight;
-	}
-		
-	
-	
-}
-
-function showloc(){
-	//alert("locfunction");
-	distination = distination.replace(";", "");
-	window.open("https://www.google.com.tr/maps/dir/39.862875, 32.854542/"+distination+"/data=!3m1!4b1!4m2!4m1!3e3");
-}
-
-function livesupport(){
-	//alert("locfunction");
-	window.location.href= "http://88.247.29.227:8081/customer";
-}
-
-function selar()
-{
- //document.getElementById("input").innerHTML = "English";
- //setInput(text="العربية")
- //send()
-	 langno="1";
-}
-function selen()
-{
- 	 langno="0";
-}
-
-/*
-function selen(chipvalue)
-{
-	 var xchip= (chipvalue.value);
- //document.getElementById("input").innerHTML = "English";
- setInput(xchip);
- //send()
-	
-
-}
-*/	
-function setlang(chipvalue)
-{
-
-	//debugger;
-	 var xchip= (chipvalue);
-	 var xchip= decodeURIComponent(chipvalue);
-	 xchip=xchip.split('%20').join(' ');
-
-	if(xchip=="English"){
-		//window.parent.location.href= "http://88.247.29.227:81/#/?language=EN";
-	parent.postMessage("English", "*");
-	selen();
-	}
-	if(xchip=="العربية"){
-		//window.parent.location.href= "http://88.247.29.227:81/#/?language=EN";
-	parent.postMessage("العربية", "*");
-	selar();
-	//alert("hiiiii");
-	}
-	if(xchip=="Talk to our team"){
-		window.location.href= "http://88.247.29.227:85/customer";
-	//	alert("ok running");
-	//parent.postMessage("العربية", "*");
-	//selar();
-	}
-	//selar();
- //document.getElementById("input").innerHTML = "English";
- setInput(xchip);
- //send()
-	
-}
- function receiveMessage(event){
-	 
-	// alert(event.data);
- }
- addEventListener("message", receiveMessage, false);
-
-//alert($('body').attr('class'));
-/*
-var url=(window.location !=window.parent.location)
-		? document.referrer
-		: document.location.href;
-		alert(url);
-		*/
-
-function starting(){
-	//alert("started");
-	setInput("hello");
-}
-
-function showlocation()
-{
-	if (navigator.geolocation){
-		navigator.geolocation.getCurrentPosition(showPosition);
-		}
-		else {
-			alert("geolocation is not supported");
-			}
-}
-function showPosition(position){
-	alert("lat : "+ position.coords.latitude+ "Long : "+position.coords.longitude);
-	/* to be added later
-	<button id="location" style="position: relative;" onClick="showlocation()">show location</button>
-	*/
-	
-}
-
-</script>
-
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Web Speech API Demo</title>
+<style>
+  * {
+    font-family: Verdana, Arial, sans-serif;
+  }
+  a:link {
+    color:#000;
+    text-decoration: none;
+  }
+  a:visited {
+    color:#000;
+  }
+  a:hover {
+    color:#33F;
+  }
+  .button {
+    background: -webkit-linear-gradient(top,#008dfd 0,#0370ea 100%);
+    border: 1px solid #076bd2;
+    border-radius: 3px;
+    color: #fff;
+    display: none;
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 1.3;
+    padding: 8px 25px;
+    text-align: center;
+    text-shadow: 1px 1px 1px #076bd2;
+    letter-spacing: normal;
+  }
+  .center {
+    padding: 10px;
+    text-align: center;
+  }
+  .final {
+    color: black;
+    padding-right: 3px; 
+  }
+  .interim {
+    color: gray;
+  }
+  .info {
+    font-size: 14px;
+    text-align: center;
+    color: #777;
+    display: none;
+  }
+  .right {
+    float: right;
+  }
+  .sidebyside {
+    display: inline-block;
+    width: 45%;
+    min-height: 40px;
+    text-align: left;
+    vertical-align: top;
+  }
+  #headline {
+    font-size: 40px;
+    font-weight: 300;
+  }
+  #info {
+    font-size: 20px;
+    text-align: center;
+    color: #777;
+    visibility: hidden;
+  }
+  #results {
+    font-size: 14px;
+    font-weight: bold;
+    border: 1px solid #ddd;
+    padding: 15px;
+    text-align: left;
+    min-height: 150px;
+  }
+  #start_button {
+    border: 0;
+    background-color:transparent;
+    padding: 0;
+  }
+</style>
+<h1 class="center" id="headline">
+  REALTIME SPEECH TO TEXT TRANSLATOR
+<div id="info">
+  <p id="info_start">Click on the microphone icon and begin speaking.</p>
+  <p id="info_speak_now">Speak now.</p>
+  <p id="info_no_speech">No speech was detected. You may need to adjust your
+    <a href="//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892">
+      microphone settings</a>.</p>
+  <p id="info_no_microphone" style="display:none">
+    No microphone was found. Ensure that a microphone is installed and that
+    <a href="//support.google.com/chrome/bin/answer.py?hl=en&amp;answer=1407892">
+    microphone settings</a> are configured correctly.</p>
+  <p id="info_allow">Click the "Allow" button above to enable your microphone.</p>
+  <p id="info_denied">Permission to use microphone was denied.</p>
+  <p id="info_blocked">Permission to use microphone is blocked. To change,
+    go to chrome://settings/contentExceptions#media-stream</p>
+  <p id="info_upgrade">Web Speech API is not supported by this browser.
+     Upgrade to <a href="//www.google.com/chrome">Chrome</a>
+     version 25 or later.</p>
+</div>
+<div class="right">
+  <button id="start_button" onclick="startButton(event)">
+    <img id="start_img" src="mic.gif" alt="Start"></button>
+</div>
+<div id="results">
 
 <script>
-
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    // here is where you change the language
+    pageLanguage: 'en'
+  }, 'results');
+}
 </script>
 
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 
-  <style type="text/css">
-		bot.body { width: 500px; margin: 0 auto; margin-top: 20px; }
-		bot.div {  position: absolute; }
-		bot.input { width: 400px; }
-		bot.button { width: 50px; }
-		bot.textarea { width: 100%; }
-		
-	</style>
-
-	
-<body onload="starting()" >
-	
-
-	
-
-	
-	
-	
-	
-	
-	
-	
-		<div style="position: sticky; bottom:100;width: -moz-available;width:-webkit-fill-available;margin-bottom:50%"  >
-	
-	
-	
-	
-	<p id="demo"></p>
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	<div id="game-filter-div" style="padding: 0;">
-           
-			
-			
-			
-			
-		
-	
-	
-	
-	
-	
-	
-       
-	
-	
-	
-		
-        <ul data-role="listview" id="jchat" >
-            
-            
-			
-			
-        
-			
-			
-        </ul>
-	
-	
-	
-	 
-			
-			
-	
-	
-	 </div>
-
-
-	 
-	 
-
+  <span id="final_span" class="final"></span>
+  <span id="interim_span" class="interim"></span>
+  <p>
 </div>
-	<div style="position: fixed;desplay:inline-block; bottom:0;width: -moz-available; width:-webkit-fill-available;" >
-		<select id="gamelist" onchange="getval(this);">
-			
-			</select>
-	<button id="rec" style="position: relative;">Send</button>
-	
-	<input id="input" type="text" placeholder="Type here..." autocomplete="off" sytle="width:100%-webkit-fill-available;position: relative;bottom:0;desplay:inline-block;" x-webkit-speech/>
-	</div>
-	
-</body>
-</html>
+<div class="center">
+  <div class="sidebyside" style="text-align:right">
+    <button id="copy_button" class="button" onclick="copyButton()">
+      Copy and Paste</button>
+    <div id="copy_info" class="info">
+      Press Control-C to copy text.<br>(Command-C on Mac.)
+    </div>
+  </div>
+  <div class="sidebyside">
+    <button id="email_button" class="button" onclick="emailButton()">
+      Create Email</button>
+    <div id="email_info" class="info">
+      Text sent to default email application.<br>
+      (See chrome://settings/handlers to change.)
+    </div>
+  </div>
+  <p>
+  <div id="div_language">
+    <select id="select_language" onchange="updateCountry()"></select>
+    &nbsp;&nbsp;
+    <select id="select_dialect"></select>
+  </div>
+</div>
+<script>
+var langs =
+[['English', ['en-AU', 'Australia'],
+    ['en-CA', 'Canada'],
+    ['en-IN', 'India'],
+    ['en-NZ', 'New Zealand'],
+    ['en-ZA', 'South Africa'],
+    ['en-GB', 'United Kingdom'],
+    ['en-US', 'United States']
+  ],['Arabic',           ['ar-IQ','Iraq'],['ar-EG','Egypt'],['ar-JO','Jordan']],
+ ['Persian',         ['fa-IR']],
+ ['Turkish',          ['tr-TR']],
+  ['Afrikaans', ['af-ZA']],
+  ['Bahasa Indonesia', ['id-ID']],
+  ['Bahasa Melayu', ['ms-MY']],
+  ['Català', ['ca-ES']],
+  ['Čeština', ['cs-CZ']],
+  ['Dansk', ['da-DK']],
+  ['Deutsch', ['de-DE']],
+  ['Español', ['es-AR', 'Argentina'],
+    ['es-BO', 'Bolivia'],
+    ['es-CL', 'Chile'],
+    ['es-CO', 'Colombia'],
+    ['es-CR', 'Costa Rica'],
+    ['es-EC', 'Ecuador'],
+    ['es-SV', 'El Salvador'],
+    ['es-ES', 'España'],
+    ['es-US', 'Estados Unidos'],
+    ['es-GT', 'Guatemala'],
+    ['es-HN', 'Honduras'],
+    ['es-MX', 'México'],
+    ['es-NI', 'Nicaragua'],
+    ['es-PA', 'Panamá'],
+    ['es-PY', 'Paraguay'],
+    ['es-PE', 'Perú'],
+    ['es-PR', 'Puerto Rico'],
+    ['es-DO', 'República Dominicana'],
+    ['es-UY', 'Uruguay'],
+    ['es-VE', 'Venezuela']
+  ],
+  ['Euskara', ['eu-ES']],
+  ['Filipino', ['fil-PH']],
+  ['Français', ['fr-FR']],
+  ['Galego', ['gl-ES']],
+  ['Hrvatski', ['hr_HR']],
+  ['IsiZulu', ['zu-ZA']],
+  ['Íslenska', ['is-IS']],
+  ['Italiano', ['it-IT', 'Italia'],
+    ['it-CH', 'Svizzera']
+  ],
+  ['Lietuvių', ['lt-LT']],
+  ['Magyar', ['hu-HU']],
+  ['Nederlands', ['nl-NL']],
+  ['Norsk bokmål', ['nb-NO']],
+  ['Polski', ['pl-PL']],
+  ['Português', ['pt-BR', 'Brasil'],
+    ['pt-PT', 'Portugal']
+  ],
+  ['Română', ['ro-RO']],
+  ['Slovenščina', ['sl-SI']],
+  ['Slovenčina', ['sk-SK']],
+  ['Suomi', ['fi-FI']],
+  ['Svenska', ['sv-SE']],
+  ['Tiếng Việt', ['vi-VN']],
+  ['Türkçe', ['tr-TR']],
+  ['Ελληνικά', ['el-GR']],
+  ['български', ['bg-BG']],
+  ['Pусский', ['ru-RU']],
+  ['Српски', ['sr-RS']],
+  ['Українська', ['uk-UA']],
+  ['한국어', ['ko-KR']],
+  ['中文', ['cmn-Hans-CN', '普通话 (中国大陆)'],
+    ['cmn-Hans-HK', '普通话 (香港)'],
+    ['cmn-Hant-TW', '中文 (台灣)'],
+    ['yue-Hant-HK', '粵語 (香港)']
+  ],
+  ['日本語', ['ja-JP']],
+  ['हिन्दी', ['hi-IN']],
+  ['ภาษาไทย', ['th-TH']]
+];
 
+for (var i = 0; i < langs.length; i++) {
+  select_language.options[i] = new Option(langs[i][0], i);
+}
+select_language.selectedIndex = 0;
+updateCountry();
+select_dialect.selectedIndex = 6;
+showInfo('info_start');
+
+function updateCountry() {
+  for (var i = select_dialect.options.length - 1; i >= 0; i--) {
+    select_dialect.remove(i);
+  }
+  var list = langs[select_language.selectedIndex];
+  for (var i = 1; i < list.length; i++) {
+    select_dialect.options.add(new Option(list[i][1], list[i][0]));
+  }
+  select_dialect.style.visibility = list[1].length == 1 ? 'hidden' : 'visible';
+}
+
+var create_email = false;
+var final_transcript = '';
+var recognizing = false;
+var ignore_onend;
+var start_timestamp;
+if (!('webkitSpeechRecognition' in window)) {
+  upgrade();
+} else {
+  start_button.style.display = 'inline-block';
+  var recognition = new webkitSpeechRecognition();
+  recognition.continuous = true;
+  recognition.interimResults = true;
+
+  recognition.onstart = function() {
+    recognizing = true;
+    showInfo('info_speak_now');
+    start_img.src = 'mic-animate.gif';
+  };
+
+  recognition.onerror = function(event) {
+    if (event.error == 'no-speech') {
+      start_img.src = 'mic.gif';
+      showInfo('info_no_speech');
+      ignore_onend = true;
+    }
+    if (event.error == 'audio-capture') {
+      start_img.src = 'mic.gif';
+      showInfo('info_no_microphone');
+      ignore_onend = true;
+    }
+    if (event.error == 'not-allowed') {
+      if (event.timeStamp - start_timestamp < 100) {
+        showInfo('info_blocked');
+      } else {
+        showInfo('info_denied');
+      }
+      ignore_onend = true;
+    }
+  };
+
+  recognition.onend = function() {
+    recognizing = false;
+    if (ignore_onend) {
+      return;
+    }
+    start_img.src = 'mic.gif';
+    if (!final_transcript) {
+      showInfo('info_start');
+      return;
+    }
+    showInfo('');
+    if (window.getSelection) {
+      window.getSelection().removeAllRanges();
+      var range = document.createRange();
+      range.selectNode(document.getElementById('final_span'));
+      window.getSelection().addRange(range);
+    }
+    if (create_email) {
+      create_email = false;
+      createEmail();
+    }
+  };
+
+  recognition.onresult = function(event) {
+    var interim_transcript = '';
+    for (var i = event.resultIndex; i < event.results.length; ++i) {
+      if (event.results[i].isFinal) {
+        final_transcript += event.results[i][0].transcript;
+      } else {
+        interim_transcript += event.results[i][0].transcript;
+      }
+    }
+    final_transcript = capitalize(final_transcript);
+    final_span.innerHTML = linebreak(final_transcript);
+    interim_span.innerHTML = linebreak(interim_transcript);
+    if (final_transcript || interim_transcript) {
+      showButtons('inline-block');
+    }
+  };
+}
+
+function upgrade() {
+  start_button.style.visibility = 'hidden';
+  showInfo('info_upgrade');
+}
+
+var two_line = /\n\n/g;
+var one_line = /\n/g;
+function linebreak(s) {
+  return s.replace(two_line, '<p></p>').replace(one_line, '<br>');
+}
+
+var first_char = /\S/;
+function capitalize(s) {
+  return s.replace(first_char, function(m) { return m.toUpperCase(); });
+}
+
+function createEmail() {
+  var n = final_transcript.indexOf('\n');
+  if (n < 0 || n >= 80) {
+    n = 40 + final_transcript.substring(40).indexOf(' ');
+  }
+  var subject = encodeURI(final_transcript.substring(0, n));
+  var body = encodeURI(final_transcript.substring(n + 1));
+  window.location.href = 'mailto:?subject=' + subject + '&body=' + body;
+}
+
+function copyButton() {
+  if (recognizing) {
+    recognizing = false;
+    recognition.stop();
+  }
+  copy_button.style.display = 'none';
+  copy_info.style.display = 'inline-block';
+  showInfo('');
+}
+
+function emailButton() {
+  if (recognizing) {
+    create_email = true;
+    recognizing = false;
+    recognition.stop();
+  } else {
+    createEmail();
+  }
+  email_button.style.display = 'none';
+  email_info.style.display = 'inline-block';
+  showInfo('');
+}
+
+function startButton(event) {
+  if (recognizing) {
+    recognition.stop();
+    return;
+  }
+  final_transcript = '';
+  recognition.lang = select_dialect.value;
+  recognition.start();
+  ignore_onend = false;
+  final_span.innerHTML = '';
+  interim_span.innerHTML = '';
+  start_img.src = 'mic-slash.gif';
+  showInfo('info_allow');
+  showButtons('none');
+  start_timestamp = event.timeStamp;
+}
+
+function showInfo(s) {
+  if (s) {
+    for (var child = info.firstChild; child; child = child.nextSibling) {
+      if (child.style) {
+        child.style.display = child.id == s ? 'inline' : 'none';
+      }
+    }
+    info.style.visibility = 'visible';
+  } else {
+    info.style.visibility = 'hidden';
+  }
+}
+
+var current_style;
+function showButtons(style) {
+  if (style == current_style) {
+    return;
+  }
+  current_style = style;
+  copy_button.style.display = style;
+  email_button.style.display = style;
+  copy_info.style.display = 'none';
+  email_info.style.display = 'none';
+}
+</script>
