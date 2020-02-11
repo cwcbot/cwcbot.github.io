@@ -144,10 +144,7 @@ function send() {
 
         var text = $("#input").val();
 		//
-		
-		if(text!=""){
-			
-			var casenotxt= text;
+		if(text!=""){var casenotxt= text;
 			var caseno=casenotxt.match(/\d/g);
 			
 			//alert(caseno);
@@ -187,6 +184,7 @@ function send() {
 			var txtTolist = $("#txtJ").val();
     conversation.push("Me: " + txtTolist + '\r\n');
 		}
+	
 	//////////////////////////////////////////////////
     $.ajax({
             type: "POST",
