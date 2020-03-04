@@ -1,29 +1,89 @@
-
 <!DOCTYPE html>
-<html>
-<style>
-body {
-  background-image: url('background.jpg');
-   height: 100%; 
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>CwC Chatbot</title>
+        <meta name="description" content="UNHCR CwC Chatbot">
+        
+        <!-- Mobile Stuff -->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="msapplication-tap-highlight" content="no">
 
-  /* Center and scale the image nicely */
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  padding-left:600px
-}
-</style>
-<body>
-<script>
+        <!-- Google Chrome -->
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="application-name" content="UNHCR Assistant">
+        <link rel="icon" href="https://console.dialogflow.com/api-client/assets/img/logo-short.png">
+        <link rel="manifest" href="/manifest.json">
+        <meta name="theme-color" content="#0072BC">
 
+        <!-- Safari -->
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-title" content="UNHCR Assistant">
+        <meta name="apple-mobile-web-app-status-bar-style" content="default">
+        <link rel="apple-touch-icon" href="https://console.dialogflow.com/api-client/assets/img/logo-short.png">
 
-if (screen.width < 1000){
-	window.location.href="https://cwcbot.github.io/bot.html"
-	
-} 
-</script>
+        <!-- OpenGraph -->
+        <meta property="og:title" content="UNHCR Assistant">
+        <meta property="og:image" content="https://imgur.com/YkOoS4h.png">
+        <meta property="og:description" content="Dialogflow unofficial Progressive Web App">
 
-<iframe src="bot.html" height="900" width="600" style="border: 2px green solid"></iframe>
+        <meta property="og:url" content="https://example.com">
+        <meta property="og:type" content="website" />
 
-</body>
+        <!-- Twitter -->
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:description" content="Dialogflow unofficial Progressive Web App" />
+        <meta name="twitter:title" content="UNHCR Assistant" />
+        <meta name="twitter:image" content="https://i.imgur.com/YkOoS4h.png" />
+
+        <!-- Windows 8 -->
+        <meta name="msapplication-TileImage" content="https://console.dialogflow.com/api-client/assets/img/logo-short.png">
+        <meta name="msapplication-TileColor" content="#0072BC">
+        
+        <!-- Microdata -->
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Website",
+            "publisher": {
+                "@type": "Person",
+                "name": "Your Name"
+            },
+            "url": "https://example.com",
+            "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": "https://example.com"
+            },
+            "description": "Dialogflow unofficial Progressive Web App",
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://example.com?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+            }
+        }
+        </script>
+
+        <!-- Stylesheets -->
+        <link rel="stylesheet" href="https://unpkg.com/material-components-web@0.26.0/dist/material-components-web.min.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    </head>
+    <body>
+
+        <div id="app"></div>
+        <script src="dist/build.js"></script>
+
+        <script>
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                    navigator.serviceWorker.register('/worker.js')
+                })
+            }
+        </script>
+
+        <noscript>
+            <h1>:(</h1>
+            <p>Hello, it looks like your JavaScript is disabled, please enable it, since the page can't render without it</p>
+        </noscript>
+    </body>
 </html>
