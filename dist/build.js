@@ -5932,6 +5932,10 @@
 else {
     e.target.composing || (t.query = e.target.value)
 }
+if(text==""){
+    e.target.value="Start"
+    t.submit();
+}
 
 
                 }
