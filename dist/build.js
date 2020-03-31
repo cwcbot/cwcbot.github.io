@@ -5940,6 +5940,7 @@ else {
                 staticClass: "material-icons iicon2 t2s",
                 on: {
                     click: function(e) {
+                        e.target.value="Personal information !"
                         t.submit()
                        // return t.mute(!0)
                     }
